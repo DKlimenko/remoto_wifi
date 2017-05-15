@@ -1,0 +1,16 @@
+set(CMAKE_SYSTEM_NAME Linux)
+set(TOOLCHAIN_DIR ${PROJECT_BINARY_DIR}/external/openwrt/toolchain)
+
+if(NOT EXISTS ${TOOLCHAIN_DIR})
+    file(DOWNLOAD https://downloads.openwrt.org/chaos_calmer/15.05.1/ar71xx/generic/OpenWrt-SDK-15.05.1-ar71xx-generic_gcc-4.8-linaro_uClibc-0.9.33.2.Linux-x86_64.tar.bz2 ${TOOLCHAIN_DIR}/toolchain.tar.bz2 SHOW_PROGRESS)
+    execute_process(COMMAND tar --strip-components=2 -xjf ${TOOLCHAIN_DIR}/toolchain.tar.bz2 WORKING_DIRECTORY ${TOOLCHAIN_DIR})
+    execute_process(COMMAND rm ${TOOLCHAIN_DIR}/toolchain.tar.bz2)
+endif()
+
+SET(CMAKE_C_COMPILER ${TOOLCHAIN_DIR}/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-gcc)
+SET(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-g++)
+SET(CMAKE_STRIP ${TOOLCHAIN_DIR}/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-strip)
+SET(CMAKE_FIND_ROOT_PATH  ${TOOLCHAIN_DIR})
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)

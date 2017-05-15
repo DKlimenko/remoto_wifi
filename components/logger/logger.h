@@ -42,7 +42,7 @@
 #endif
 #define ENABLE_DEBUG 1
 
-enum MsgType {
+enum MsgTypeEnum {
   MSGTYPE_DD = 0,
   MSGTYPE_WW,
   MSGTYPE_EE,
@@ -50,6 +50,8 @@ enum MsgType {
   MSGTYPE_TR,
   MSGTYPE_INF
 };
+
+typedef enum MsgTypeEnum MsgType;
 
 #if ENABLE_DEBUG
 
@@ -90,8 +92,7 @@ enum MsgType {
 void print(const char* file, UInt32 line, const char* method, const char* text);
 void _print(MsgType level, const char* file, UInt32 line, const char* method,
             const char* fmt, ...);
-void _trace(const char* file, UInt32 line, const char* method,
-            const char* text = NULL);
+void _trace(const char* file, UInt32 line, const char* method, const char* text);
 void traceOpen(const char* pTraceFName);
 void traceClose();
 

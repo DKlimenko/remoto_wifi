@@ -110,4 +110,4 @@ typedef unsigned long long int UInt64;  // NOLINT
 #define true 1
 typedef UInt8 bool; 
 
-#endif  // SRC_FRAMEWORK_UTILS_TYPES_H_
+#endif  // COMPONENTS_UTILS_TYPES_H_

@@ -6,12 +6,12 @@ set(ARCH_TYPE_OPTION "$ENV{ARCH_TYPE}")
 set(BUILD_TEST $ENV{BUILD_TESTS})
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release")
 
+set(CMAKE_SYSTEM_NAME Linux)
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  message(AUTHOR_WARNING "OS_LINUX")
   add_definitions(-DOS_LINUX)
   add_definitions(-DOS_POSIX)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "QNX")
-  message(AUTHOR_WARNING "OS_QNX")
   add_definitions(-DOS_QNX)
   add_definitions(-DOS_POSIX)
   set(RTLIB)
@@ -42,6 +42,7 @@ SET(CMAKE_C_FLAGS_DEBUG "-g")
 SET(CMAKE_C_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 SET(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
 SET(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
 
 # must be called before link_directories
 include_directories (
@@ -56,18 +57,16 @@ LINK_DIRECTORIES(${LINK_DIRECTORIES} ${PROJECT_BINARY_DIR})
 
 set(LIBRARIES
   Logger
-  Utils
   Profile
 )
 
 set(TEST_APP_LIBRARIES
   Logger
-  Utils
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   list(APPEND LIBRARIES pthread)
-  list(APPEND LIBRARIES dl)
+  #list(APPEND LIBRARIES dl)
 endif()
 
 add_executable(${TARGET} main.c)

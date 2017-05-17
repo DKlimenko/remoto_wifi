@@ -35,7 +35,6 @@
 
 #include <stdint.h>
 
-namespace profile {
 
 #define INI_FILE_VER 1000
 
@@ -105,7 +104,5 @@ extern Ini_search_id ini_parse_line(const char *line, const char *tag,
 #ifdef __cplusplus
 }
 #endif
-
-}  // namespace profile
 
 #endif  // SRC_COMPONENTS_CONFIG_PROFILE_INI_FILE_H_

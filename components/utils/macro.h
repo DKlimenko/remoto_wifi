@@ -47,8 +47,6 @@
 
 #define UNUSED(x) (void) x;
 
-#define SKIP_RETURN_VALUE(FUNC) static_cast<void>((FUNC));
-
 #ifdef DEBUG
 #define ASSERT(condition) \
   do {                    \

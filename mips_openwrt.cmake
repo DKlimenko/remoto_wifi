@@ -1,4 +1,3 @@
-set(CMAKE_SYSTEM_NAME Linux)
 set(TOOLCHAIN_DIR ${PROJECT_BINARY_DIR}/external/openwrt/toolchain)
 
 if(NOT EXISTS ${TOOLCHAIN_DIR})

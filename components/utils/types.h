@@ -106,4 +106,8 @@ typedef signed long long int Int64;  // NOLINT
  */
 typedef unsigned long long int UInt64;  // NOLINT
 
+#define false 0
+#define true 1
+typedef UInt8 bool; 
+
 #endif  // SRC_FRAMEWORK_UTILS_TYPES_H_

@@ -181,7 +181,7 @@ class AutoTrace {
  *
  * @return The pointer to the string with the short file name
  */
-inline const char* const getFileName(const char* const pFileName) {
+static const char* const getFileName(const char* const pFileName) {
   const char* pRet = 0;
 
   do {

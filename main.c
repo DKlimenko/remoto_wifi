@@ -33,12 +33,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "logger/logger.h"
-#include "config_profile/profile.h"
+#include "config_profile/ini_file.h"
 
 int main(int32_t argc, char** argv) {
   DBG_MSG("Application started");
-  profile::Profile::Instance()->UpdateValues();
-  traceOpen(profile::Profile::Instance()->log_file_name().c_str());
+  const char log_file_name[] = "remoto_wifi.log";
+  traceOpen(log_file_name);
 
   DBG_MSG("Application stopped");
   traceClose();

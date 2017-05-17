@@ -38,14 +38,14 @@
 #include <stdio.h>
 
 #include "logger/logger.h"
-#include "utils/mutex_locker.h"
+
 
 //-------------------------------------------------------------------
 #if ENABLE_DEBUG
 
 bool sDebugEnabled = true;
 bool sPrintToConsole = true;
-static std::string TraceFName;
+static char TraceFName[2048];
 
 #define CLOSE_LOG_ALWAYS 0  // 0|1
 #if !CLOSE_LOG_ALWAYS
@@ -53,8 +53,6 @@ static FILE* sLogfile = 0;
 #endif
 
 static char traceStr[2048];
-// make logger mutex recursive to avoid deadlock
-static sync_primitives::Lock mutex(true);
 static MsgType sMsgType = MSGTYPE_DD;
 
 void print(const char* file, UInt32 line, const char* method,
@@ -63,7 +61,7 @@ void print(const char* file, UInt32 line, const char* method,
     return;
   }
 
-  sync_primitives::AutoLock lock(&mutex);
+  //FIXME: sync_primitives::AutoLock lock(&mutex);
   bool bEOLTerminated =
       false;  ///< Check whether the string is terminated by EOL
   if ('\0' != *text && '\n' == text[strlen(text) - 1]) {
@@ -86,7 +84,8 @@ void print(const char* file, UInt32 line, const char* method,
       pLogfile, (false == sPrintToConsole) ? 0 : stdout,
   };
 
-  for (UInt32 i = 0; sizeof pStreams / sizeof(pStreams[0]) > i; ++i) {
+  UInt32 i = 0;
+  for (; sizeof pStreams / sizeof(pStreams[0]) > i; ++i) {
     FILE* pStream = pStreams[i];
     if (NULL != pStream) {
       const char* pMsgType = "  ";
@@ -122,10 +121,10 @@ void print(const char* file, UInt32 line, const char* method,
             "%s %04d%02d%02d %02d:%02d:%02d [PID %d:TID %02X] %s %d %s() %s%s",
             pMsgType, now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
             now.tm_hour, now.tm_min, now.tm_sec, getpid(),
-            static_cast<unsigned int>(pthread_self()), file, line, method, text,
+            (unsigned int)pthread_self(), file, line, method, text,
             (false == bEOLTerminated) ? "\n" : "");
 
-        SKIP_RETURN_VALUE(fflush(pStream));
+        fflush(pStream);
       }
     }
   }
@@ -140,7 +139,6 @@ void print(const char* file, UInt32 line, const char* method,
 
 void _print(MsgType level, const char* file, UInt32 line, const char* method,
             const char* fmt, ...) {
-  sync_primitives::AutoLock lock(&mutex);
 
   if (false == sDebugEnabled) return;
 
@@ -148,11 +146,11 @@ void _print(MsgType level, const char* file, UInt32 line, const char* method,
   va_list argptr;
 
   // format the output string
-  SKIP_RETURN_VALUE(va_start(argptr, fmt));
+  va_start(argptr, fmt);
 
   traceStr[0] = 0;
 
-  SKIP_RETURN_VALUE(::vsnprintf(traceStr, sizeof(traceStr), fmt, argptr));
+  vsnprintf(traceStr, sizeof(traceStr), fmt, argptr);
 
   // write terminating zero
   traceStr[sizeof(traceStr) - 1] =
@@ -170,7 +168,6 @@ void _print(MsgType level, const char* file, UInt32 line, const char* method,
 
 void _trace(const char* file, UInt32 line, const char* method,
             const char* text) {
-  sync_primitives::AutoLock lock(&mutex);
 
   if (false == sDebugEnabled) return;
 
@@ -179,7 +176,6 @@ void _trace(const char* file, UInt32 line, const char* method,
 }
 
 void traceOpen(const char* pTraceFName) {
-  TraceFName = pTraceFName;
   FILE* fp = 0;
   if ((fp = fopen(pTraceFName, "w")) != 0)
     printf("Create trace file %s\n", pTraceFName);

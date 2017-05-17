@@ -21,3 +21,6 @@ else
 
     echo "Done"
 fi
+
+
+#export STAGING_DIR=/home/dklimenko/projects/github/remoto_wifi_build/external/openwrt/toolchain

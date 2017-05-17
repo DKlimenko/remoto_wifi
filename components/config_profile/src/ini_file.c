@@ -29,15 +29,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "config_profile/ini_file.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
 #include <limits.h>
-#include <stdint.h>
+
+#include "utils/types.h"
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -48,10 +49,6 @@
 #ifdef __linux__
 #define USE_MKSTEMP 1
 #endif
-
-#include <string>
-
-namespace profile {
 
 char *ini_write_inst(const char *fname, uint8_t flag) {
   FILE *fp = NULL;
@@ -83,7 +80,7 @@ char *ini_write_inst(const char *fname, uint8_t flag) {
   fprintf(fp, "\n");
 
   fclose(fp);
-  return const_cast<char *>(fname);
+  return (char *)fname;
 }
 
 char *ini_read_value(const char *fname, const char *chapter, const char *item,
@@ -391,4 +388,3 @@ Ini_search_id ini_parse_line(const char *line, const char *tag, char *value) {
 
   return INI_NOTHING;
 }
-}  // namespace profile
